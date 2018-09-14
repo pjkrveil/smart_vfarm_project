@@ -43,23 +43,6 @@ for label in np.unique(labels):
 	if numPixels > 300:
 		mask = cv2.add(mask, labelMask)
 
-# loop over the unique components
-for label in np.unique(labels):
-	# if this is the background label, ignore it
-	if label == 0:
-		continue
-
-	# otherwise, construct the label mask and count the
-	# number of pixels 
-	labelMask = np.zeros(thresh.shape, dtype="uint8")
-	labelMask[labels == label] = 255
-	numPixels = cv2.countNonZero(labelMask)
-
-	# if the number of pixels in the component is sufficiently
-	# large, then add it to our mask of "large blobs"
-	if numPixels > 300:
-		mask = cv2.add(mask, labelMask)
-
 # find the contours in the mask, then sort them from left to
 # right
 cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,

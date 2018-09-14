@@ -61,17 +61,46 @@ def find_contour(mask, image):
 	cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 	cnts = contours.sort_contours(cnts)[0]
 
+	lc_list = []
+
 	for (i, c) in enumerate(cnts):
 		# draw the bright spot on the image
 		(x, y, w, h) = cv2.boundingRect(c)
 
 		cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-		# ((cX, cY), radius) = cv2.minEnclosingCircle(c)
-		# cv2.circle(image, (int(cX), int(cY)), int(radius), (0, 255, 0), 1)
+
 		cv2.putText(image, "#{}".format(i + 1), (x, y - 15),
 		cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 255, 0), 2)
 
-	return x, y, w, h
+		lc_list.append((x, y, w, h))
+
+	return lc_list
+
+def point_ctr(location_list, image):
+	ctr_list = []
+
+	for (x, y, w, h) in location_list:
+		(cX, cY) = (x + w // 2, y + h // 2)
+		# ((cX, cY), radius) = cv2.minEnclosingCircle(c)
+		cv2.circle(image, (int(cX), int(cY)), 2, (0, 0, 255), 2)
+
+		ctr_list.append((cX, cY))
+
+	return ctr_list, image
+
+def save_lcdata(ctr_list, filename):
+	file = open(filename, 'w')
+
+	f_line = "num\tcX\tcY\n"
+	file.write(f_line)
+	num = 1
+
+	for (cX, cY) in ctr_list:
+		data = "%d\t%d\t%d\n" % (num, cX, cY)
+		file.write(data)
+		num += 1
+
+	file.close()
 
 def show_img(image):
 	# show the output image
