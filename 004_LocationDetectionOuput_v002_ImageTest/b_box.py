@@ -2,7 +2,7 @@ from modules import *
 
 load_path = "./testimg/"
 save_path = "./result/"
-image = load_img(load_path + "test-1.jpg")
+image = load_img(load_path + "test-7.jpg")
 
 # Declare Variables
 
